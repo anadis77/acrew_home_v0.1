@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A·CREW — Designing AI-powered work systems</title>
+<link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@200;300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root{--black:#080808;--charcoal:#1A1A1A;--gold:#C9A84C;--gold-warm:#2A2520;--white:#FAFAF8;--dimmer:#555;--border:rgba(255,255,255,.06);--border-gold:rgba(201,168,76,.2);--text-muted:rgba(250,250,248,.68);--text-soft:rgba(250,250,248,.56)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"DM Mono",monospace;background:var(--black);color:var(--white);font-size:11px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.25rem 3rem;display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,8,.88);backdrop-filter:blur(14px);border-bottom:.5px solid var(--border);transition:padding .3s}
+.nav-logo{font-family:"Urbanist",sans-serif;font-weight:200;font-size:18px;letter-spacing:.12em;color:var(--white);text-decoration:none}
+.nav-logo .d{color:var(--gold)}
+.nav-links{display:flex;gap:1.6rem;align-items:center}
+.nav-links a{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(250,250,248,.5);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--white)}
+.nav-lang{color:var(--gold)!important;border-left:.5px solid var(--border-gold);padding-left:1.1rem}
+.nav-event{color:var(--gold)!important}
+.nav-cta{font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:.45rem 1.1rem;border:.5px solid var(--gold);color:var(--gold);background:transparent;border-radius:2px;cursor:pointer;text-decoration:none;transition:all .2s}
+.nav-cta:hover{background:var(--gold);color:var(--black)}
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .75s ease,transform .75s ease}.reveal.v{opacity:1;transform:none}.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}
+section{padding:6rem 3rem;border-top:.5px solid var(--border)}
+.slabel{font-size:8px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);opacity:.65;margin-bottom:1.25rem;display:flex;align-items:center;gap:.6rem}
+.slabel::after{content:"";width:32px;height:.5px;background:var(--gold);opacity:.4}
+.stitle{font-family:"Urbanist",sans-serif;font-weight:200;font-size:clamp(30px,3.4vw,42px);line-height:1.22;color:var(--white);margin-bottom:1rem;letter-spacing:.01em}
+.ssub{font-family:"Urbanist",sans-serif;font-weight:400;font-size:14px;color:var(--text-muted);line-height:1.85;max-width:620px;margin-bottom:3rem;letter-spacing:.02em}
+#hero{position:relative;min-height:100vh;display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,520px);gap:3rem;align-items:center;overflow:hidden;padding:8rem 3rem 4rem;isolation:isolate}
+#hero::before{content:"";position:absolute;inset:-20% -10% auto auto;width:56vw;height:56vw;max-width:760px;max-height:760px;background:radial-gradient(circle,rgba(201,168,76,.18),transparent 62%);filter:blur(10px);opacity:.85;pointer-events:none}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(201,168,76,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,.022) 1px,transparent 1px);background-size:60px 60px}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,8,8,.98) 0%,rgba(8,8,8,.82) 48%,rgba(8,8,8,.36) 100%);z-index:0}
+.hero-content{position:relative;z-index:2;max-width:650px;transform:translateY(-2.5vh)}
+.hero-eyebrow{font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);opacity:.75;margin-bottom:1.15rem;display:flex;align-items:center;gap:.75rem}
+.hero-eyebrow::before{content:"";width:24px;height:.5px;background:var(--gold);opacity:.6}
+.hero-event{display:inline-flex;align-items:center;gap:.65rem;width:fit-content;margin-top:.3rem;padding:.55rem .8rem;border:.5px solid var(--border-gold);border-radius:999px;background:rgba(201,168,76,.08);color:var(--gold);font-size:10px;letter-spacing:.08em;text-decoration:none;transition:all .2s}.hero-event:hover{border-color:var(--gold);background:rgba(201,168,76,.13);transform:translateY(-1px)}.hero-event span{color:rgba(250,250,248,.78)}
+.hero-title{font-family:"Urbanist",sans-serif;font-weight:200;font-size:clamp(34px,4.7vw,62px);line-height:1.04;letter-spacing:.02em;color:var(--white);margin-bottom:1.35rem}
+.hero-title em{color:var(--gold);font-style:normal}
+.hero-sub{font-family:"Urbanist",sans-serif;font-weight:400;font-size:15px;color:var(--text-muted);line-height:1.75;max-width:470px;margin-bottom:2rem;letter-spacing:.02em}
+.hero-ctas{display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:2.5rem}
+.btn-p,.btn-s{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:.75rem 1.75rem;border-radius:2px;cursor:pointer;text-decoration:none;transition:all .22s ease;display:inline-block;position:relative;isolation:isolate;overflow:hidden}
+.btn-p{background:var(--gold);color:var(--black);border:none}.btn-p:hover{background:#E8D580;transform:translateY(-1px)}
+.btn-s{background:transparent;color:var(--white);border:.5px solid rgba(255,255,255,.18)}.btn-s:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-1px)}
+.hero-visual{position:relative;z-index:2;align-self:center;justify-self:end;width:min(100%,520px);perspective:1200px}
+.hero-portrait{position:relative;border:1px solid rgba(201,168,76,.28);border-radius:8px;overflow:hidden;background:#050505;box-shadow:0 30px 90px rgba(0,0,0,.52),0 0 42px rgba(201,168,76,.08);transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .18s ease}
+.hero-portrait::before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 0%,rgba(255,255,255,.12) 38%,transparent 58%);transform:translateX(var(--shine,-120%));transition:transform .2s ease;mix-blend-mode:screen;pointer-events:none;z-index:2}
+.hero-portrait::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 58%,rgba(8,8,8,.58));pointer-events:none;z-index:1}
+.hero-portrait img{display:block;width:100%;height:auto;aspect-ratio:1122/1402;object-fit:cover;object-position:center top;filter:saturate(1.04) contrast(1.03)}
+.hero-orbit{position:absolute;border:1px solid rgba(201,168,76,.2);border-radius:999px;pointer-events:none;animation:orbit 9s linear infinite}.hero-orbit.o1{width:84px;height:84px;right:-22px;top:14%}.hero-orbit.o2{width:132px;height:132px;left:-38px;bottom:18%;animation-duration:13s;animation-direction:reverse}.hero-orbit::after{content:"";position:absolute;width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 18px var(--gold);top:50%;left:-4px}@keyframes orbit{to{transform:rotate(360deg)}}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:.5px solid var(--border)}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:.5px solid var(--border)}
+.card{background:var(--black);padding:2rem;transition:background .25s,transform .25s;position:relative;overflow:hidden}
+.card-link{text-decoration:none;color:inherit;cursor:pointer;display:block}
+.card:hover{background:#0D0D0D;transform:translateY(-2px)}
+.num,.badge{font-size:9px;color:var(--gold);opacity:.65;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.65rem}
+.ct{font-family:"Urbanist",sans-serif;font-weight:300;font-size:15px;color:var(--white);margin-bottom:.5rem}
+.cd{font-size:12px;color:var(--text-soft);line-height:1.78;letter-spacing:.01em}
+#services{background:var(--charcoal)}
+.pname{font-family:"Urbanist",sans-serif;font-weight:300;font-size:17px;color:var(--white);margin-bottom:.65rem}
+.pprice{font-family:"Urbanist",sans-serif;font-weight:200;font-size:26px;color:var(--gold);line-height:1;margin-bottom:.65rem}.pprice span{font-size:12px;color:var(--text-soft)}
+.ptag{font-size:9px;padding:2px 8px;border-radius:2px;background:var(--gold-warm);color:var(--gold);border:.5px solid var(--border-gold);display:inline-block;width:fit-content;margin-top:.75rem}
+.pcta{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;display:flex;align-items:center;gap:.4rem;margin-top:1rem;transition:gap .2s}.pcta:hover{gap:.85rem}
+#ath{position:relative;overflow:hidden}.ath-bg{position:absolute;right:-5%;top:0;bottom:0;width:45%;background:url('athena-hero.png') center/cover;opacity:.06;mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,1) 40%);-webkit-mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,1) 40%)}
+.ath-c{position:relative;z-index:2;max-width:680px}.social-panel{margin-top:1rem;padding:1.25rem 1.5rem;border:.5px solid var(--border);background:rgba(8,8,8,.72)}.social-k{font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);opacity:.7;margin-bottom:.45rem}.social-t{font-family:"Urbanist",sans-serif;font-weight:300;font-size:15px;color:var(--white);margin-bottom:.35rem}.social-d{font-size:12px;color:var(--text-soft);line-height:1.72;margin-bottom:1rem}.social-actions{display:flex;gap:.75rem;flex-wrap:wrap}.social-link{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;padding:.65rem 1rem;border:.5px solid var(--border-gold);border-radius:2px;transition:all .2s}.social-link:hover{background:rgba(201,168,76,.08);border-color:var(--gold);transform:translateY(-1px)}
+#team{background:var(--charcoal)}.team-wrap{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start}.quote{font-family:"Urbanist",sans-serif;font-weight:300;font-size:clamp(30px,3.4vw,42px);color:rgba(250,250,248,.78);line-height:1.24;letter-spacing:.01em}.quote em{color:var(--white);font-style:normal;font-weight:300}.team-list{display:flex;flex-direction:column;gap:1.5rem}.team-card{display:grid;grid-template-columns:64px 1fr;gap:1rem;align-items:start}.avatar{width:64px;height:64px;border-radius:50%;border:1px solid rgba(201,168,76,.35);background:radial-gradient(circle at 35% 25%,rgba(201,168,76,.2),rgba(8,8,8,.82));display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 0 24px rgba(201,168,76,.08)}.avatar img{width:100%;height:100%;object-fit:cover;display:block}.avatar-placeholder{font-family:"Urbanist",sans-serif;font-weight:300;font-size:20px;color:var(--gold);letter-spacing:.02em}
+#contact{background:var(--charcoal)}.contact-wrap{display:grid;grid-template-columns:1fr 1fr;gap:4rem}.ctag{font-family:"Urbanist",sans-serif;font-weight:200;font-size:clamp(30px,3.4vw,42px);line-height:1.22;letter-spacing:.01em;margin-bottom:1.5rem;max-width:620px}.ctag em{color:var(--gold);font-style:normal}.cdesc{font-family:"Urbanist",sans-serif;font-weight:400;font-size:14px;color:var(--text-muted);line-height:1.85;margin-bottom:2rem}.ctype{display:flex;flex-direction:column;gap:.4rem}.line{font-size:11px;color:var(--text-soft);padding:.4rem 0}.line::before{content:"→";color:var(--gold);margin-right:.65rem}
+.form{display:flex;flex-direction:column;gap:.75rem}.row{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem}.group{display:flex;flex-direction:column;gap:.35rem}.label{font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:rgba(250,250,248,.5)}.input,.select,.textarea{background:var(--black);border:.5px solid rgba(255,255,255,.1);border-radius:2px;padding:.65rem .9rem;color:var(--white);font-family:"Urbanist",sans-serif;font-size:12px;outline:none;transition:border-color .2s,box-shadow .2s;width:100%}.input:focus,.select:focus,.textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,.08)}.textarea{resize:vertical;min-height:80px}.submit{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:.85rem 2rem;background:var(--gold);color:var(--black);border:none;border-radius:2px;cursor:pointer;align-self:flex-start}.submit:disabled{opacity:.38;cursor:not-allowed;filter:saturate(.5)}.form-status{min-height:1.2rem;font-size:11px;line-height:1.6;color:var(--text-soft)}.form-status.ok{color:var(--gold)}.form-status.error{color:#F2B8B5}
+.strip{display:flex;height:3px}.s1{flex:6;background:var(--black)}.s2{flex:2.5;background:var(--charcoal)}.s3{flex:1;background:var(--gold)}.s4{flex:.5;background:var(--white)}
+footer{padding:2.5rem 3rem;border-top:.5px solid var(--border);display:flex;justify-content:space-between;align-items:center}.fl{font-family:"Urbanist",sans-serif;font-weight:200;font-size:15px;letter-spacing:.12em}.fl .d{color:var(--gold)}.ft,.fr{font-size:10px;color:var(--text-soft)}
+@media (max-width:980px){nav{padding:1rem 1.25rem}.nav-links{gap:1rem}.nav-links a{font-size:9px}.nav-cta{padding:.42rem .75rem}#hero{grid-template-columns:1fr;gap:2.25rem;padding:7.25rem 1.25rem 3rem}.hero-overlay{background:linear-gradient(180deg,rgba(8,8,8,.94),rgba(8,8,8,.72))}.hero-content{max-width:none;transform:none}.hero-visual{justify-self:center;max-width:460px}.grid-2,.grid-3,.team-wrap,.contact-wrap{grid-template-columns:1fr}section{padding:4.5rem 1.25rem}footer{padding:2rem 1.25rem;gap:1rem;flex-direction:column;text-align:center}}
+@media (max-width:620px){body{font-size:10px}nav{align-items:flex-start}.nav-links{flex-wrap:wrap;justify-content:flex-end;gap:.65rem;max-width:260px}.nav-links a:not(.nav-cta):not(.nav-lang):not(.nav-event){display:none}#hero{padding-top:6.5rem}.hero-title{font-size:clamp(34px,12vw,46px);line-height:1.08}.stitle,.ctag,.quote{font-size:clamp(29px,9.8vw,38px);line-height:1.24}.hero-sub{font-size:13.5px}.hero-ctas{flex-direction:column}.btn-p,.btn-s{text-align:center;width:100%}.hero-visual{width:100%}.hero-orbit{display:none}.row{grid-template-columns:1fr}.team-card{grid-template-columns:54px 1fr;gap:.85rem}.avatar{width:54px;height:54px}}
+</style>
+</head>
+<body>
+<nav id="nav">
+  <a href="index-en.html" class="nav-logo">A<span class="d">·</span>CREW</a>
+  <div class="nav-links">
+    <a href="#diag">AX Check</a>
+    <a href="#services">Services</a>
+    <a href="class-detail-en.html" class="nav-event">July Class</a>
+    <a href="#ath">Athena</a>
+    <a href="#team">Team</a>
+    <a href="#contact" class="nav-cta">Contact</a>
+    <a href="index.html" class="nav-lang">KO</a>
+  </div>
+</nav>
+
+<section id="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow reveal">AX Project Team</div>
+    <h1 class="hero-title reveal d1">A<span style="color:var(--gold)">·</span>CREW designs<br><em>AI-powered work systems</em><br>for teams.</h1>
+    <p class="hero-sub reveal d2">For individuals, we design AI work partners that run repeated personal workflows. For teams, we design execution agents that enter role-specific business workflows.</p>
+    <div class="hero-ctas reveal d3">
+      <a href="#diag" class="btn-p">Run AX Check</a>
+      <a href="#contact" class="btn-s">Contact Us</a>
+    </div>
+    <a href="class-detail-en.html" class="hero-event reveal d4">Opening in July <span>Vibe Coding &amp; Agent Building Class →</span></a>
+  </div>
+  <div class="hero-visual reveal d2" id="heroVisual" aria-label="Athena AI business agent visual">
+    <div class="hero-portrait" id="heroPortrait"><img src="athena-hero.png" alt="A·CREW Athena AI business agent illustration" loading="eager"></div>
+    <span class="hero-orbit o1" aria-hidden="true"></span>
+    <span class="hero-orbit o2" aria-hidden="true"></span>
+  </div>
+</section>
+
+<section id="diag">
+  <div class="slabel reveal">AX Check</div>
+  <h2 class="stitle reveal">AI tools are everywhere.<br>Has execution improved?</h2>
+  <p class="ssub reveal">The real question is not whether a team uses AI, but whether AI is embedded in the workflows that drive revenue, customer management, and operations. Without structure, AI remains a personal convenience instead of an organizational capability.</p>
+  <div class="grid-2">
+    <div class="card reveal"><div class="num">01</div><div class="ct">Decisions do not become execution</div><div class="cd">Meetings create discussion, but owners, deadlines, dependencies, and risks do not reliably become operating tasks.</div></div>
+    <div class="card reveal d1"><div class="num">02</div><div class="ct">Customer opportunities leak in follow-up</div><div class="cd">Inquiries, consultation notes, proposals, and next actions are scattered, making sales quality depend on individual discipline.</div></div>
+    <div class="card reveal d2"><div class="num">03</div><div class="ct">Knowledge becomes repeated cost</div><div class="cd">Proposals, reports, content, and know-how are not structured for reuse, so teams recreate the same work repeatedly.</div></div>
+    <div class="card reveal d3"><div class="num">04</div><div class="ct">AI impact does not scale across the team</div><div class="cd">A few people may use AI well, but without shared prompts, approval rules, data structure, and routines, the impact does not compound.</div></div>
+  </div>
+</section>
+
+<section id="use">
+  <div class="slabel reveal">Use Case</div>
+  <h2 class="stitle reveal">Agents enter<br>role-specific workflows.</h2>
+  <p class="ssub reveal">We analyze repeated work across operations, content, marketing, and product development, then design agents for the preparation, structuring, generation, and review steps AI can own.</p>
+  <div class="grid-2 reveal">
+    <div class="card"><div class="ct">Personal Work Agent</div><div class="cd">Organizes repeated personal tasks, research, document drafts, and preparation work as an AI work partner.</div></div>
+    <div class="card"><div class="ct">Operations Agent</div><div class="cd">Structures meetings, follow-ups, operating logs, and customer response flows.</div></div>
+    <div class="card"><div class="ct">Content Agent</div><div class="cd">Creates ideas, drafts, channel-specific content variants, and publishing checklists.</div></div>
+    <div class="card"><div class="ct">Marketing Agent</div><div class="cd">Supports campaign planning, target messaging, landing page copy, and performance reports.</div></div>
+    <div class="card"><div class="ct">Product / Developer Agent</div><div class="cd">Structures requirements, feature specs, QA checklists, and release notes.</div></div>
+    <div class="card"><div class="ct">Expert Agent</div><div class="cd">Turns expert knowledge and personal work methods into repeatable structures for lectures, consulting, care, legal work, or advisory work.</div></div>
+  </div>
+</section>
+
+<section id="services">
+  <div class="slabel reveal">Services</div>
+  <h2 class="stitle reveal">From learning AI<br>to operating with AI</h2>
+  <p class="ssub reveal">From individual work partners to company execution systems, A·CREW helps people learn, build, and adopt AI agents at the right level.</p>
+  <div class="grid-3 reveal">
+    <a class="card card-link" href="class-detail-en.html" aria-label="View Vibe Coding and Agent Building Class details">
+      <div class="badge">Class 01 · 02</div>
+      <div class="pname">Vibe Coding & Agent Building Class</div>
+      <div class="pprice">Practice</div>
+      <div class="cd">A hands-on workshop where individuals build work tools and teams design agent structures without traditional coding.</div>
+      <div class="ptag">Opening in July 2026</div>
+      <span class="pcta">Class Details →</span>
+    </a>
+    <a class="card card-link" href="#contact" aria-label="Inquire about custom agent development">
+      <div class="badge">Service</div>
+      <div class="pname">Custom Agent Development</div>
+      <div class="pprice">Build</div>
+      <div class="cd">We design agent roles, knowledge structures, and operating routines for individual workflows or role-specific company workflows.</div>
+      <div class="ptag">Personal · Team Custom</div>
+      <span class="pcta">Build Inquiry →</span>
+    </a>
+    <a class="card card-link" href="#contact" aria-label="Inquire about work partner agent package">
+      <div class="badge">Package</div>
+      <div class="pname">Work Partner Agent Package</div>
+      <div class="pprice">Package</div>
+      <div class="cd">A complete package combining custom agents with a dedicated working environment for individual work partners or team execution systems.</div>
+      <div class="ptag">Hardware included</div>
+      <span class="pcta">Package Inquiry →</span>
+    </a>
+  </div>
+</section>
+
+<section id="ath">
+  <div class="ath-bg"></div>
+  <div class="ath-c">
+    <div class="slabel reveal">Athena</div>
+    <h2 class="stitle reveal">Athena is a custom AI execution agent<br>for role-specific workflows</h2>
+    <p class="ssub reveal">Athena is A·CREW’s internal agent and the reference model for our custom agent product. We analyze repeated work across operations, content, marketing, and product development, then design the preparation, structuring, generation, and review steps AI can own.</p>
+    <div class="grid-3 reveal">
+      <div class="card"><div class="ct">Role-specific workflow analysis</div><div class="cd">We break down repeated work and bottlenecks across operations, content, marketing, and product development.</div></div>
+      <div class="card"><div class="ct">AI role definition</div><div class="cd">We define where AI prepares, structures, generates, or reviews inside the actual workflow.</div></div>
+      <div class="card"><div class="ct">Knowledge setup</div><div class="cd">Service decks, FAQs, campaign assets, feature specs, and internal guidelines become reusable agent context.</div></div>
+      <div class="card"><div class="ct">Work output design</div><div class="cd">Operating logs, content drafts, marketing copy, QA checklists, and other outputs are designed around real work.</div></div>
+      <div class="card"><div class="ct">Approval rules</div><div class="cd">We separate what AI can prepare from what people must decide, creating safe operating standards.</div></div>
+      <div class="card"><div class="ct">Continuous improvement</div><div class="cd">Prompts, knowledge sources, and agent roles are refined based on real usage inside the company.</div></div>
+    </div>
+    <div class="social-panel reveal">
+      <div class="social-k">Athena Operating Log</div>
+      <div class="social-t">We share what we learn from operating Athena in real work</div>
+      <div class="social-d">A·CREW publishes Athena experiments, workflow use cases, and operating content on LinkedIn and Facebook.</div>
+      <div class="social-actions">
+        <a class="social-link" href="https://www.linkedin.com/in/a-crew-athena" target="_blank" rel="noopener noreferrer">View LinkedIn →</a>
+        <a class="social-link" href="https://www.facebook.com/profile.php?id=61590313992570" target="_blank" rel="noopener noreferrer">View Facebook →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="team">
+  <div class="slabel reveal">Team</div>
+  <div class="team-wrap">
+    <div class="quote reveal">We are first testing<br><em>how to work with AI</em><br>inside our own team.</div>
+    <div class="team-list reveal d1">
+      <div class="card team-card"><div class="avatar"><img src="kai-profile.png" alt="Kai profile photo"></div><div><div class="pname">Kai</div><div class="cd">A 25-year PO with experience across Samsung, Coupang, Naver, and Web3. Leads strategy, marketing, product ownership, and consulting for A·CREW.</div></div></div>
+      <div class="card team-card"><div class="avatar"><img src="remo-profile.png" alt="Remo profile photo"></div><div><div class="pname">Remo</div><div class="cd">A biomedical engineering PhD and healthcare company CEO with 10 years of operating experience. Leads strategy, consulting, and agent development for real workflows.</div></div></div>
+      <div class="card team-card" style="border:.5px solid var(--border-gold)"><div class="avatar"><img src="athena-profile.png" alt="Athena character profile image"></div><div><div class="pname" style="color:var(--gold)">Athena</div><div class="cd">A·CREW’s AI business agent. Drafts meeting notes, proposals, operation logs, and content. Kai and Remo review and decide.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="slabel reveal">Contact</div>
+  <div class="contact-wrap">
+    <div class="reveal">
+      <div class="ctag">Let’s find the right<br><em>AI operating model</em><br>for your team.</div>
+      <div class="cdesc">Tell us about your current situation. A·CREW will suggest the right direction for training, agent development, or AX consulting.</div>
+      <div class="ctype">
+        <div class="line">AX readiness consultation</div>
+        <div class="line">AI training inquiry</div>
+        <div class="line">Custom agent development</div>
+        <div class="line">Corporate AI training</div>
+        <div class="line">B2B AX consulting</div>
+      </div>
+    </div>
+    <form class="form reveal d1">
+      <div class="row">
+        <div class="group"><label class="label">Name</label><input type="text" name="name" class="input" placeholder="Your name" required></div>
+        <div class="group"><label class="label">Phone</label><input type="tel" name="phone" class="input" placeholder="+82 / Phone" required></div>
+        <div class="group"><label class="label">Email</label><input type="email" name="email" class="input" placeholder="hello@example.com" required></div>
+      </div>
+      <div class="group"><label class="label">Area of interest</label>
+        <select name="interest" class="select" required>
+          <option value="">Please select</option>
+          <option>AI practical training</option>
+          <option>Custom AI agent development</option>
+          <option>AI work partner package</option>
+          <option>Corporate AX consulting</option>
+          <option>Not sure yet</option>
+        </select>
+      </div>
+      <div class="group"><label class="label">Message</label><textarea name="message" class="textarea" placeholder="Briefly describe your situation or question." required></textarea></div>
+      <input type="hidden" name="page" value="A·CREW English Homepage">
+      <button type="submit" class="submit" disabled>Send Inquiry</button>
+      <div class="form-status" aria-live="polite"></div>
+    </form>
+  </div>
+</section>
+
+<div class="strip"><div class="s1"></div><div class="s2"></div><div class="s3"></div><div class="s4"></div></div>
+<footer>
+  <div class="fl">A<span class="d">·</span>CREW</div>
+  <div class="ft">Knowing AI and working with AI are different.</div>
+  <div class="fr">© A·CREW 2026</div>
+</footer>
+
+<script src="config.js"></script>
+<script>
+const obs = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting) e.target.classList.add('v'); }), {threshold:.08,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.reveal').forEach(r => obs.observe(r));
+window.addEventListener('scroll', () => {
+  const compact = window.scrollY > 60;
+  const mobile = window.matchMedia('(max-width: 980px)').matches;
+  document.getElementById('nav').style.padding = compact ? (mobile ? '.75rem 1.25rem' : '.85rem 3rem') : (mobile ? '1rem 1.25rem' : '1.25rem 3rem');
+});
+const heroVisual = document.getElementById('heroVisual');
+const heroPortrait = document.getElementById('heroPortrait');
+if (heroVisual && heroPortrait && window.matchMedia('(hover: hover)').matches) {
+  heroVisual.addEventListener('pointermove', e => {
+    const b = heroVisual.getBoundingClientRect();
+    const x = (e.clientX - b.left) / b.width - .5;
+    const y = (e.clientY - b.top) / b.height - .5;
+    heroPortrait.style.setProperty('--ry', `${x * 9}deg`);
+    heroPortrait.style.setProperty('--rx', `${y * -9}deg`);
+    heroPortrait.style.setProperty('--shine', `${(x + .5) * 80 - 20}%`);
+  });
+  heroVisual.addEventListener('pointerleave', () => {
+    heroPortrait.style.setProperty('--ry', '0deg');
+    heroPortrait.style.setProperty('--rx', '0deg');
+    heroPortrait.style.setProperty('--shine', '-120%');
+  });
+}
+
+const CONTACT_ENDPOINT = window.ACREW_CONTACT_ENDPOINT || '';
+
+document.querySelectorAll('.form').forEach(form => {
+  const fields = form.querySelectorAll('input,select,textarea');
+  const submit = form.querySelector('.submit');
+  const status = form.querySelector('.form-status');
+  const defaultLabel = submit.textContent;
+  const update = () => {
+    submit.disabled = !Array.from(fields).every(field => field.checkValidity() && field.value.trim() !== '');
+  };
+  fields.forEach(field => field.addEventListener('input', update));
+  fields.forEach(field => field.addEventListener('change', update));
+  form.addEventListener('submit', async event => {
+    event.preventDefault();
+    update();
+    status.className = 'form-status';
+    status.textContent = '';
+
+    if (submit.disabled) return;
+
+    if (!CONTACT_ENDPOINT) {
+      status.classList.add('error');
+      status.textContent = 'Add the Google Apps Script deployment URL to activate inquiry submission.';
+      return;
+    }
+
+    submit.disabled = true;
+    submit.textContent = 'Sending...';
+
+    try {
+      await fetch(CONTACT_ENDPOINT, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: new URLSearchParams(new FormData(form))
+      });
+      form.reset();
+      status.classList.add('ok');
+      status.textContent = 'Your inquiry has been received. A confirmation email has been sent.';
+    } catch (error) {
+      status.classList.add('error');
+      status.textContent = 'Something went wrong. Please try again later.';
+    } finally {
+      submit.textContent = defaultLabel;
+      update();
+    }
+  });
+  update();
+});
+</script>
+</body>
+</html>

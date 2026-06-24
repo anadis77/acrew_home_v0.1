@@ -1,0 +1,9 @@
+{
+  "name": "acrew-homepage",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/create-config.js",
+    "start": "python3 -m http.server 3000"
+  }
+}

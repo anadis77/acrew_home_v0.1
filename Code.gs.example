@@ -1,0 +1,121 @@
+var SHEET_NAME = '문의';
+var INTERNAL_EMAIL = 'your-email@example.com';
+var SPREADSHEET_ID = 'YOUR_SPREADSHEET_ID';
+
+function doGet() {
+  return ContentService.createTextOutput('A·CREW inquiry endpoint is ready.');
+}
+
+function doPost(e) {
+  try {
+    var data = getPayload_(e);
+    var now = new Date();
+    var sheet = getSheet_();
+    data._sheetName = sheet.getName();
+    data._spreadsheetUrl = sheet.getParent().getUrl();
+    data._savedRow = writeInquiry_(sheet, data, now);
+    SpreadsheetApp.flush();
+
+    sendInternalMail_(data, now);
+    if (data.email) sendCustomerMail_(data);
+
+    return json_({ ok: true });
+  } catch (error) {
+    console.error(error);
+    return json_({ ok: false, error: String(error) });
+  }
+}
+
+function setupSheet() {
+  ensureHeader_(getSheet_());
+}
+
+function getPayload_(e) {
+  if (!e) return {};
+  if (e.postData && e.postData.contents) {
+    try {
+      return JSON.parse(e.postData.contents);
+    } catch (error) {
+      return e.parameter || {};
+    }
+  }
+  return e.parameter || {};
+}
+
+function getSheet_() {
+  var ss = SPREADSHEET_ID
+    ? SpreadsheetApp.openById(SPREADSHEET_ID)
+    : SpreadsheetApp.getActiveSpreadsheet();
+  if (!ss) throw new Error('Spreadsheet is not connected.');
+  var sheet = ss.getSheetByName(SHEET_NAME) || ss.insertSheet(SHEET_NAME);
+  ensureHeader_(sheet);
+  return sheet;
+}
+
+function ensureHeader_(sheet) {
+  if (sheet.getLastRow() > 0) return;
+  sheet.appendRow(['접수일시', '이름', '연락처', '이메일', '관심영역', '현재고민', '유입페이지', '처리상태', '메모']);
+}
+
+function writeInquiry_(sheet, data, receivedAt) {
+  var nextRow = Math.max(sheet.getLastRow() + 1, 2);
+  sheet.getRange(nextRow, 1, 1, 9).setValues([[
+    receivedAt,
+    data.name || '',
+    data.phone || '',
+    data.email || '',
+    data.interest || '',
+    data.message || '',
+    data.page || '',
+    '신규',
+    ''
+  ]]);
+  return nextRow;
+}
+
+function sendInternalMail_(data, receivedAt) {
+  var subject = '[A·CREW 문의] ' + (data.interest || '새 문의가 접수되었습니다');
+  var body = [
+    'A·CREW 홈페이지 문의가 접수되었습니다.',
+    '',
+    '접수일시: ' + Utilities.formatDate(receivedAt, 'Asia/Seoul', 'yyyy-MM-dd HH:mm:ss'),
+    '이름: ' + (data.name || ''),
+    '연락처: ' + (data.phone || ''),
+    '이메일: ' + (data.email || ''),
+    '관심영역: ' + (data.interest || ''),
+    '유입페이지: ' + (data.page || ''),
+    '저장 시트: ' + (data._sheetName || ''),
+    '저장 행: ' + (data._savedRow || ''),
+    '저장 문서: ' + (data._spreadsheetUrl || ''),
+    '',
+    '현재 고민:',
+    data.message || ''
+  ].join('\n');
+  var options = { name: 'A·CREW 문의 알림' };
+  if (data.email) options.replyTo = data.email;
+  MailApp.sendEmail(INTERNAL_EMAIL, subject, body, options);
+}
+
+function sendCustomerMail_(data) {
+  var subject = 'A·CREW 문의가 접수되었습니다';
+  var body = (data.name || '안녕하세요') + '님, 안녕하세요.\n\nA·CREW에 문의를 남겨주셔서 감사합니다.\n보내주신 내용을 확인한 뒤 연락드리겠습니다.\n\n감사합니다.\nA·CREW';
+  var htmlBody = buildCustomerHtml_(data);
+  MailApp.sendEmail(data.email, subject, body, { name: 'A·CREW', htmlBody: htmlBody });
+}
+
+function buildCustomerHtml_(data) {
+  var name = escapeHtml_(data.name || '안녕하세요');
+  var interest = escapeHtml_(data.interest || '상담 문의');
+  var message = escapeHtml_(data.message || '').replace(/\n/g, '<br>');
+  return '<div style="margin:0;padding:0;background:#080808;font-family:Arial,Helvetica,sans-serif;color:#F7F3E8;"><div style="max-width:640px;margin:0 auto;padding:40px 22px;"><div style="border:1px solid rgba(214,185,76,.38);background:#0D0D0B;"><div style="padding:28px 30px 22px;border-bottom:1px solid rgba(214,185,76,.25);"><div style="font-size:24px;letter-spacing:8px;color:#D6B94C;">A&middot;CREW</div><div style="margin-top:10px;font-size:11px;letter-spacing:3px;color:#9F8A3B;">AI STRATEGY &middot; ARCHITECTURE &middot; IMPACT</div></div><div style="padding:34px 30px 30px;"><div style="font-size:12px;letter-spacing:3px;color:#D6B94C;margin-bottom:18px;">INQUIRY RECEIVED</div><h1 style="margin:0 0 18px;font-size:28px;line-height:1.35;font-weight:300;color:#FFFFFF;">문의가 정상 접수되었습니다.</h1><p style="margin:0 0 22px;font-size:15px;line-height:1.9;color:#D8D2C2;">' + name + '님, A&middot;CREW에 문의를 남겨주셔서 감사합니다.<br>보내주신 내용을 확인한 뒤 적합한 교육, 에이전트 구축, 컨설팅 방향을 정리해 연락드리겠습니다.</p><div style="margin:26px 0;padding:22px;border-left:3px solid #D6B94C;background:#14130F;"><div style="font-size:12px;letter-spacing:2px;color:#9F8A3B;margin-bottom:10px;">접수 내용</div><div style="font-size:14px;line-height:1.8;color:#F7F3E8;"><strong style="color:#D6B94C;">관심영역</strong><br>' + interest + '</div><div style="height:14px;"></div><div style="font-size:14px;line-height:1.8;color:#D8D2C2;"><strong style="color:#D6B94C;">현재 고민</strong><br>' + message + '</div></div><p style="margin:0;font-size:13px;line-height:1.8;color:#AFA898;">이 메일은 홈페이지 문의 접수 후 자동으로 발송되었습니다.<br>빠르게 확인하고 답변드리겠습니다.</p></div><div style="padding:18px 30px;border-top:1px solid rgba(214,185,76,.2);font-size:11px;line-height:1.7;color:#8E8779;">A&middot;CREW | AI와 함께 일하는 업무 시스템을 설계합니다.</div></div></div></div>';
+}
+
+function escapeHtml_(value) {
+  return String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function json_(obj) {
+  return ContentService
+    .createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
+}
