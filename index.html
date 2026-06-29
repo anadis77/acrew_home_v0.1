@@ -251,6 +251,26 @@ footer{padding:2.5rem 3rem;border-top:.5px solid var(--border);display:flex;just
 .ci:hover,.cs:hover,.cta:hover{border-color:rgba(201,168,76,.28);background:#0B0B0B}
 .ci:focus,.cs:focus,.cta:focus{box-shadow:0 0 0 3px rgba(201,168,76,.08)}
 
+/* PC CENTERING — max content width 1344px, centered on wide screens */
+@media (min-width: 1340px) {
+  nav {
+    padding-left: max(3rem, calc((100vw - 1344px) / 2));
+    padding-right: max(3rem, calc((100vw - 1344px) / 2));
+  }
+  #hero {
+    padding-left: max(3rem, calc((100vw - 1344px) / 2));
+    padding-right: max(3rem, calc((100vw - 1344px) / 2));
+  }
+  section {
+    padding-left: max(3rem, calc((100vw - 1344px) / 2));
+    padding-right: max(3rem, calc((100vw - 1344px) / 2));
+  }
+  footer {
+    padding-left: max(3rem, calc((100vw - 1344px) / 2));
+    padding-right: max(3rem, calc((100vw - 1344px) / 2));
+  }
+}
+
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}
 }
