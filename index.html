@@ -251,6 +251,36 @@ footer{padding:2.5rem 3rem;border-top:.5px solid var(--border);display:flex;just
 .ci:hover,.cs:hover,.cta:hover{border-color:rgba(201,168,76,.28);background:#0B0B0B}
 .ci:focus,.cs:focus,.cta:focus{box-shadow:0 0 0 3px rgba(201,168,76,.08)}
 
+/* BUTTON & HERO EVENT TYPOGRAPHY */
+.btn-p,.btn-s,.csub{
+  font-family:"Urbanist",sans-serif;
+  font-weight:500;
+  font-size:17px;
+  letter-spacing:.02em;
+  text-transform:none;
+  line-height:1.25;
+  min-height:58px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+.btn-p,.csub{color:#080808}
+.btn-s{color:rgba(250,250,248,.98);border-color:rgba(250,250,248,.26)}
+.hero-event{
+  font-family:"Urbanist",sans-serif;
+  font-weight:500;
+  font-size:16px;
+  letter-spacing:.01em;
+  line-height:1.4;
+  padding:.85rem 1.25rem;
+}
+.hero-event span{color:rgba(250,250,248,.94)}
+@media (max-width:620px){
+  .btn-p,.btn-s,.csub{font-size:17px;min-height:62px;letter-spacing:.01em}
+  .hero-event{font-size:16px;line-height:1.45;padding:1rem 1.1rem;width:100%;justify-content:center}
+}
+
 /* PC CENTERING — max content width 1344px, centered on wide screens */
 @media (min-width: 1340px) {
   nav {
